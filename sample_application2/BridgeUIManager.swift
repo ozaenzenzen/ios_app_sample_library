@@ -66,7 +66,7 @@ public class BridgeUIManager {
                 BridgeUIManager.initConfigData = data
                 self.configSetup = {
                     if let datas1 = JSONHelper().jsonStringToDict(data) {
-//                        print("datas1: \(datas1)")
+                        //                        print("datas1: \(datas1)")
                         if let dataMap = datas1["data"] as? [String: Any],
                            let textStatus = dataMap["text_status"] as? String {
                             print("textStatus: \(textStatus)")
@@ -127,12 +127,18 @@ public class BridgeUIManager {
               let engine = BridgeUIManager.flutterEngine else { return }
         
         BridgeUIManager.flutterVC = FlutterViewController(engine: engine, nibName: nil, bundle: nil)
-        BridgeUIManager.flutterVC?.modalPresentationStyle = .fullScreen
+        BridgeUIManager.flutterVC?.modalPresentationStyle = .pageSheet
+//        BridgeUIManager.flutterVC?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+
         
         // Send data to Flutter before showing the screen
         invokeFlutter()
         
         topVC.present(BridgeUIManager.flutterVC!, animated: true)
+//        let rootViewController = UIApplication.shared.windows.first?.rootViewController
+        //        let rootViewController = UIWindowScene?.windows.first?.rootViewController
+//        rootViewController?.navigationController?.pushViewController(BridgeUIManager.flutterVC!, animated: true)
+
     }
     
     /// ✅ Sends data to Flutter via MethodChannel
@@ -143,8 +149,10 @@ public class BridgeUIManager {
             "flavor": BridgeUIManager.flavor
         ]
         
-        print("🔵 Sending initData to Flutter: \(args)")
-        BridgeUIManager.methodChannel?.invokeMethod("clientConfigChannel", arguments: args)
+        let newValue: String = JSONHelper().dictionaryToJsonString(args) ?? ""
+        
+        print("🔵 Sending initData to Flutter: \(newValue)")
+        BridgeUIManager.methodChannel?.invokeMethod("clientConfigChannel", arguments: newValue)
         if (BridgeUIManager.initConfigData != "") {
             BridgeUIManager.methodChannel?.invokeMethod("fetchConfigData", arguments: BridgeUIManager.initConfigData)
         }

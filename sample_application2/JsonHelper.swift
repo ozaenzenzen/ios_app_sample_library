@@ -43,4 +43,14 @@ class JSONHelper {
             return nil
         }
     }
+    
+    func dictionaryToJsonString(_ dictionary: [String: Any]) -> String? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])
+            return String(data: jsonData, encoding: .utf8)
+        } catch {
+            print("Dictionary to JSON conversion error: \(error.localizedDescription)")
+            return nil
+        }
+    }
 }
