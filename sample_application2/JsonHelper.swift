@@ -1,0 +1,46 @@
+//
+//  JsonHelper.swift
+//  sample_application2
+//
+//  Created by Fauzan Akmal Mahdi on 26/05/25.
+//
+
+import Foundation
+
+class JSONHelper {
+    // Basic function that returns [String: Any]
+    func jsonStringToDict(_ jsonString: String) -> [String: Any]? {
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            print("Error: Unable to convert string to data")
+            return nil
+        }
+        
+        do {
+            if let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                return dictionary
+            } else {
+                print("Error: JSON is not a dictionary")
+                return nil
+            }
+        } catch {
+            print("Error parsing JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    // Generic function with error handling
+    func parseJSONString<T>(_ jsonString: String, as type: T.Type) -> T? {
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            print("Error: Unable to convert string to data")
+            return nil
+        }
+        
+        do {
+            let result = try JSONSerialization.jsonObject(with: jsonData, options: [])
+            return result as? T
+        } catch {
+            print("Error parsing JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
+}
