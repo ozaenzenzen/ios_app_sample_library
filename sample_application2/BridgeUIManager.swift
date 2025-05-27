@@ -9,6 +9,7 @@ import Foundation
 import Flutter
 import UIKit
 import FlutterPluginRegistrant
+import SwiftUI
 
 public class BridgeUIManager {
     public static let shared = BridgeUIManager()
@@ -34,6 +35,10 @@ public class BridgeUIManager {
     
     private init() {}
     
+    static public func getFlutterEngine() -> FlutterEngine? {
+        return flutterEngine
+    }
+    
     // ✅ Called first by the client
     public func initFunction(clientId: String, clientSecret: String, flavor: String) {
         BridgeUIManager.clientId = clientId
@@ -47,13 +52,10 @@ public class BridgeUIManager {
         }
         // Setup method channel
         if let binaryMessenger = BridgeUIManager.flutterEngine?.binaryMessenger {
-            // print("binarymessenger: \(binaryMessenger)")
             BridgeUIManager.methodChannel = FlutterMethodChannel(
                 name: BridgeUIManager.channelName,
                 binaryMessenger: binaryMessenger,
             )
-            // methodChannel?.invokeMethod("clientConfigChannel", arguments: "")
-            // print("methodChannel: \(String(describing: methodChannel))")
         }
         callConfig()
     }
@@ -127,18 +129,12 @@ public class BridgeUIManager {
               let engine = BridgeUIManager.flutterEngine else { return }
         
         BridgeUIManager.flutterVC = FlutterViewController(engine: engine, nibName: nil, bundle: nil)
-        BridgeUIManager.flutterVC?.modalPresentationStyle = .pageSheet
-//        BridgeUIManager.flutterVC?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-
+        BridgeUIManager.flutterVC?.modalPresentationStyle = .fullScreen
         
         // Send data to Flutter before showing the screen
         invokeFlutter()
         
         topVC.present(BridgeUIManager.flutterVC!, animated: true)
-//        let rootViewController = UIApplication.shared.windows.first?.rootViewController
-        //        let rootViewController = UIWindowScene?.windows.first?.rootViewController
-//        rootViewController?.navigationController?.pushViewController(BridgeUIManager.flutterVC!, animated: true)
-
     }
     
     /// ✅ Sends data to Flutter via MethodChannel
