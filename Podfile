@@ -21,6 +21,8 @@ target 'sample_application2' do
   target 'sample_application2UITests' do
     # Pods for testing
   end
+  
+  # pod 'SampleLibrary2', :path => '/Users/fauzanakmalmahdi/Documents/Main/iOS Project/SampleLibrary2'
 end
 
 post_install do |installer|
